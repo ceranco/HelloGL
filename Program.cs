@@ -53,7 +53,7 @@ internal class Program
     private static uint vao;
     private static uint vbo;
     private static uint ebo;
-    private static uint shader;
+    private static ShaderProgram shader;
     private static bool polygonModeToggle = false;
 
     private static IWindow CreateWindow()
@@ -116,45 +116,7 @@ internal class Program
             BufferUsageARB.StaticDraw
         );
 
-        uint vertexShader = Gl.CreateShader(ShaderType.VertexShader);
-        Gl.ShaderSource(vertexShader, vertexShaderSource);
-        Gl.CompileShader(vertexShader);
-
-        string infoLog = Gl.GetShaderInfoLog(vertexShader);
-        if (!string.IsNullOrWhiteSpace(infoLog))
-        {
-            Console.WriteLine($"Error compiling vertex shader: {infoLog}");
-            return;
-        }
-
-        uint fragmentShader = Gl.CreateShader(ShaderType.FragmentShader);
-        Gl.ShaderSource(fragmentShader, fragmentshaderSource);
-        Gl.CompileShader(fragmentShader);
-
-        infoLog = Gl.GetShaderInfoLog(vertexShader);
-        if (!string.IsNullOrWhiteSpace(infoLog))
-        {
-            Console.WriteLine($"Error compiling fragment shader: {infoLog}");
-            return;
-        }
-
-        shader = Gl.CreateProgram();
-        Gl.AttachShader(shader, vertexShader);
-        Gl.AttachShader(shader, fragmentShader);
-        Gl.LinkProgram(shader);
-
-        infoLog = Gl.GetProgramInfoLog(shader);
-        if (!string.IsNullOrWhiteSpace(infoLog))
-        {
-            Console.WriteLine($"Error linking shader: {infoLog}");
-            return;
-        }
-
-        Gl.DetachShader(shader, vertexShader);
-        Gl.DetachShader(shader, fragmentShader);
-        Gl.DeleteShader(vertexShader);
-        Gl.DeleteShader(fragmentShader);
-
+        shader = new ShaderProgram(Gl, vertexShaderSource, fragmentshaderSource);
         Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), null);
         Gl.EnableVertexAttribArray(0);
     }
@@ -166,7 +128,7 @@ internal class Program
         Gl.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         Gl.Clear(ClearBufferMask.ColorBufferBit);
 
-        Gl.UseProgram(shader);
+        shader.Use();
         Gl.BindVertexArray(vao);
         Gl.DrawElements(
             PrimitiveType.Triangles,
@@ -181,7 +143,7 @@ internal class Program
         Gl.DeleteBuffer(vbo);
         Gl.DeleteBuffer(ebo);
         Gl.DeleteVertexArray(vao);
-        Gl.DeleteProgram(shader);
+        shader.Dispose();
     }
 
     private static void Main()
