@@ -34,20 +34,27 @@ internal class Program
 
     private static readonly float[] vertices =
     {
-        -0.5f,
-        -0.5f,
+        0.5f,
+        0.5f,
         0.0f,
         0.5f,
         -0.5f,
         0.0f,
+        -0.5f,
+        -0.5f,
         0.0f,
+        -0.5f,
         0.5f,
         0.0f
     };
 
+    private static readonly uint[] indices = { 0, 1, 3, 1, 2, 3 };
+
     private static uint vao;
     private static uint vbo;
+    private static uint ebo;
     private static uint shader;
+    private static bool polygonModeToggle = false;
 
     private static IWindow CreateWindow()
     {
@@ -75,6 +82,14 @@ internal class Program
                 {
                     window.Close();
                 }
+                else if (key == Key.Space || key == Key.Enter)
+                {
+                    Gl.PolygonMode(
+                        MaterialFace.FrontAndBack,
+                        polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
+                    );
+                    polygonModeToggle = !polygonModeToggle;
+                }
             };
         }
 
@@ -89,6 +104,15 @@ internal class Program
             BufferTargetARB.ArrayBuffer,
             (nuint)(vertices.Length * sizeof(float)),
             vertices,
+            BufferUsageARB.StaticDraw
+        );
+
+        ebo = Gl.GenBuffer();
+        Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, ebo);
+        Gl.BufferData<uint>(
+            BufferTargetARB.ElementArrayBuffer,
+            (nuint)(indices.Length * sizeof(uint)),
+            indices,
             BufferUsageARB.StaticDraw
         );
 
@@ -137,17 +161,28 @@ internal class Program
 
     private static void OnUpdate(double deltaTime) { }
 
-    private static void OnRender(double deltaTime)
+    private static unsafe void OnRender(double deltaTime)
     {
         Gl.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         Gl.Clear(ClearBufferMask.ColorBufferBit);
 
         Gl.UseProgram(shader);
         Gl.BindVertexArray(vao);
-        Gl.DrawArrays(PrimitiveType.Triangles, 0, 3);
+        Gl.DrawElements(
+            PrimitiveType.Triangles,
+            (uint)indices.Length,
+            DrawElementsType.UnsignedInt,
+            null
+        );
     }
 
-    private static void OnClose() { }
+    private static void OnClose()
+    {
+        Gl.DeleteBuffer(vbo);
+        Gl.DeleteBuffer(ebo);
+        Gl.DeleteVertexArray(vao);
+        Gl.DeleteProgram(shader);
+    }
 
     private static void Main()
     {
