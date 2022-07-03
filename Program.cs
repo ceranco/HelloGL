@@ -1,58 +1,71 @@
 ﻿#nullable disable
 
+using System.Runtime.InteropServices;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+
+[StructLayout(LayoutKind.Sequential, Pack = 0)]
+struct VertexColor
+{
+    public float r;
+    public float g;
+    public float b;
+
+    public VertexColor(float r, float g, float b)
+    {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 0)]
+internal struct VertexPosition
+{
+    public float x;
+    public float y;
+    public float z;
+
+    public VertexPosition(float x, float y, float z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 0)]
+struct Vertex
+{
+    public VertexPosition position;
+    public VertexColor color;
+
+    public Vertex(VertexPosition position, VertexColor color)
+    {
+        this.position = position;
+        this.color = color;
+    }
+}
 
 internal class Program
 {
     private static readonly IWindow window = CreateWindow();
     private static GL Gl;
 
-    private static readonly string vertexShaderSource =
-        @"
-		#version 330 core
-		layout (location = 0) in vec3 aPos;
-
-		void main()
-		{
-			gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-		}
-		";
-
-    private static readonly string fragmentshaderSource =
-        @"
-		#version 330 core
-		out vec4 FragColor;
-
-		void main()
-		{
-			FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-		}
-		";
-
-    private static readonly float[] vertices =
+    private static readonly Vertex[] vertices =
     {
-        0.5f,
-        0.5f,
-        0.0f,
-        0.5f,
-        -0.5f,
-        0.0f,
-        -0.5f,
-        -0.5f,
-        0.0f,
-        -0.5f,
-        0.5f,
-        0.0f
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.0f), new VertexColor(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.0f), new VertexColor(0.0f, 1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.0f, 0.5f, 0.0f), new VertexColor(0.0f, 0.0f, 1.0f))
     };
 
-    private static readonly uint[] indices = { 0, 1, 3, 1, 2, 3 };
+    private static readonly uint[] indices = { 0, 1, 2 };
 
-    private static uint vao;
-    private static uint vbo;
-    private static uint ebo;
+    private static VertexArrayObject<Vertex, uint> vao;
+    private static BufferObject<Vertex> vbo;
+    private static BufferObject<uint> ebo;
     private static ShaderProgram shader;
     private static bool polygonModeToggle = false;
 
@@ -95,41 +108,34 @@ internal class Program
 
         Gl = GL.GetApi(window);
 
-        vao = Gl.GenVertexArray();
-        Gl.BindVertexArray(vao);
+        vbo = new BufferObject<Vertex>(Gl, vertices, BufferTargetARB.ArrayBuffer);
+        ebo = new BufferObject<uint>(Gl, indices, BufferTargetARB.ElementArrayBuffer);
 
-        vbo = Gl.GenBuffer();
-        Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
-        Gl.BufferData<float>(
-            BufferTargetARB.ArrayBuffer,
-            (nuint)(vertices.Length * sizeof(float)),
-            vertices,
-            BufferUsageARB.StaticDraw
+        vao = new VertexArrayObject<Vertex, uint>(Gl, vbo, ebo);
+        vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
+        vao.VertexAttributePointer(
+            1,
+            3,
+            VertexAttribPointerType.Float,
+            offset: sizeof(VertexPosition)
         );
 
-        ebo = Gl.GenBuffer();
-        Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, ebo);
-        Gl.BufferData<uint>(
-            BufferTargetARB.ElementArrayBuffer,
-            (nuint)(indices.Length * sizeof(uint)),
-            indices,
-            BufferUsageARB.StaticDraw
-        );
-
-        shader = new ShaderProgram(Gl, vertexShaderSource, fragmentshaderSource);
-        Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), null);
-        Gl.EnableVertexAttribArray(0);
+        shader = ShaderProgram.FromFiles(Gl, "shader.vs", "shader.fs");
+        shader.Set("offset", 0.0f);
     }
 
-    private static void OnUpdate(double deltaTime) { }
+    private static void OnUpdate(double deltaTime)
+    {
+        shader.Set("offset", 0.5f * MathF.Sin((float)window.Time));
+    }
 
     private static unsafe void OnRender(double deltaTime)
     {
         Gl.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         Gl.Clear(ClearBufferMask.ColorBufferBit);
 
+        vao.Bind();
         shader.Use();
-        Gl.BindVertexArray(vao);
         Gl.DrawElements(
             PrimitiveType.Triangles,
             (uint)indices.Length,
@@ -140,9 +146,9 @@ internal class Program
 
     private static void OnClose()
     {
-        Gl.DeleteBuffer(vbo);
-        Gl.DeleteBuffer(ebo);
-        Gl.DeleteVertexArray(vao);
+        vao.Dispose();
+        vbo.Dispose();
+        ebo.Dispose();
         shader.Dispose();
     }
 

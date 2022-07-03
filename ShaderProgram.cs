@@ -1,9 +1,13 @@
+using System.Numerics;
 using Silk.NET.OpenGL;
 
 internal class ShaderProgram : IDisposable
 {
     private readonly GL Gl;
     private readonly uint shaderProgram;
+
+    public static ShaderProgram FromFiles(GL Gl, string vertexFile, string fragmentFile) =>
+        new(Gl, File.ReadAllText(vertexFile), File.ReadAllText(fragmentFile));
 
     public ShaderProgram(GL Gl, string vertexSource, string fragmentSource)
     {
@@ -32,6 +36,57 @@ internal class ShaderProgram : IDisposable
     }
 
     public void Use() => Gl.UseProgram(shaderProgram);
+
+    public void Set(string name, bool value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        Gl.Uniform1(location, value ? 1 : 0);
+    }
+
+    public void Set(string name, int value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        Gl.Uniform1(location, value);
+    }
+
+    public void Set(string name, float value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        Gl.Uniform1(location, value);
+    }
+
+    public void Set(string name, float x, float y, float z, float w) =>
+        Set(name, new Vector4(x, y, z, y));
+
+    public void Set(string name, Vector4 value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        Gl.Uniform4(location, ref value);
+    }
 
     public void Dispose() => Gl.DeleteProgram(shaderProgram);
 
