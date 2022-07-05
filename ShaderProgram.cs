@@ -1,4 +1,5 @@
 using System.Numerics;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 
 internal class ShaderProgram : IDisposable
@@ -86,6 +87,21 @@ internal class ShaderProgram : IDisposable
 
         Use();
         Gl.Uniform4(location, ref value);
+    }
+
+    public void Set(string name, Matrix4X4<float> value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        unsafe
+        {
+            Gl.UniformMatrix4(location, 1, false, (float*)&value);
+        }
     }
 
     public void Dispose() => Gl.DeleteProgram(shaderProgram);

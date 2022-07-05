@@ -54,13 +54,11 @@ internal struct VertexPosition
 struct Vertex
 {
     public VertexPosition position;
-    public VertexColor color;
     public TextureCoord textureCoord;
 
     public Vertex(VertexPosition position, VertexColor color, TextureCoord textureCoord)
     {
         this.position = position;
-        this.color = color;
         this.textureCoord = textureCoord;
     }
 }
@@ -100,15 +98,16 @@ internal class Program
     private static BufferObject<Vertex> vbo;
     private static BufferObject<uint> ebo;
     private static ShaderProgram shader;
-    private static Texture texture1;
-    private static Texture texture2;
+    private static Texture texture;
     private static bool polygonModeToggle = false;
     private static float mixValue = 0.0f;
+    private static readonly Transform transform1 = new();
+    private static readonly Transform transform2 = new();
 
     private static IWindow CreateWindow()
     {
         var options = WindowOptions.Default;
-        options.Size = new Vector2D<int>(1600, 1200);
+        options.Size = new Vector2D<int>(1600, 1600);
         options.Title = "Hello OpenGL with Silk.NET";
 
         var window = Window.Create(options);
@@ -164,29 +163,28 @@ internal class Program
         vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
         vao.VertexAttributePointer(
             1,
-            3,
+            2,
             VertexAttribPointerType.Float,
             offset: sizeof(VertexPosition)
         );
-        vao.VertexAttributePointer(
-            2,
-            2,
-            VertexAttribPointerType.Float,
-            offset: sizeof(VertexPosition) + sizeof(VertexColor)
-        );
 
         shader = ShaderProgram.FromFiles(Gl, "shader.vs", "shader.fs");
-        shader.Set("offset", 0.0f);
+        shader.Set("transform", Matrix4X4<float>.Identity);
 
-        texture1 = Texture.FromFile(Gl, "wall.jpg");
-        texture2 = Texture.FromFile(Gl, "awesomeface.png");
+        texture = Texture.FromFile(Gl, "wall.jpg");
         shader.Set("texture1", 0);
-        shader.Set("texture2", 1);
     }
 
     private static void OnUpdate(double deltaTime)
     {
-        // shader.Set("offset", 0.5f * MathF.Sin((float)window.Time));
+        transform1.Rotation = Quaternion<float>.CreateFromAxisAngle(
+            Vector3D<float>.UnitZ,
+            (float)(window.Time)
+        );
+        transform1.Translation = new Vector3D<float>(0.5f, -0.5f, 0.0f);
+
+        transform2.Scale = 0.5f * MathF.Sin((float)window.Time) + 0.5f;
+        transform2.Translation = new Vector3D<float>(-0.5f, 0.5f, 0.0f);
     }
 
     private static unsafe void OnRender(double deltaTime)
@@ -197,9 +195,17 @@ internal class Program
         vao.Bind();
         shader.Use();
 
-        texture1.Use(TextureUnit.Texture0);
-        texture2.Use(TextureUnit.Texture1);
+        texture.Use(TextureUnit.Texture0);
 
+        shader.Set("transform", transform1.Matrix);
+        Gl.DrawElements(
+            PrimitiveType.Triangles,
+            (uint)indices.Length,
+            DrawElementsType.UnsignedInt,
+            null
+        );
+
+        shader.Set("transform", transform2.Matrix);
         Gl.DrawElements(
             PrimitiveType.Triangles,
             (uint)indices.Length,
@@ -214,8 +220,7 @@ internal class Program
         vbo.Dispose();
         ebo.Dispose();
         shader.Dispose();
-        texture1.Dispose();
-        texture2.Dispose();
+        texture.Dispose();
     }
 
     private static void OnResize(Vector2D<int> size) => Gl.Viewport(size);
