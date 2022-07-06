@@ -7,7 +7,11 @@ internal class VertexArrayObject<TVertexType, TIndexType> : IDisposable
     private readonly GL Gl;
     private readonly uint vao;
 
-    public VertexArrayObject(GL Gl, BufferObject<TVertexType> vbo, BufferObject<TIndexType>? ebo)
+    public VertexArrayObject(
+        GL Gl,
+        BufferObject<TVertexType> vbo,
+        BufferObject<TIndexType>? ebo = null
+    )
     {
         this.Gl = Gl;
 

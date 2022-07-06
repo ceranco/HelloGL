@@ -56,7 +56,7 @@ struct Vertex
     public VertexPosition position;
     public TextureCoord textureCoord;
 
-    public Vertex(VertexPosition position, VertexColor color, TextureCoord textureCoord)
+    public Vertex(VertexPosition position, TextureCoord textureCoord)
     {
         this.position = position;
         this.textureCoord = textureCoord;
@@ -70,45 +70,70 @@ internal class Program
 
     private static readonly Vertex[] vertices =
     {
-        new Vertex(
-            new VertexPosition(0.5f, 0.5f, 0.0f),
-            new VertexColor(1.0f, 0.0f, 0.0f),
-            new TextureCoord(1.0f, 1.0f)
-        ), // top right
-        new Vertex(
-            new VertexPosition(0.5f, -0.5f, 0.0f),
-            new VertexColor(0.0f, 1.0f, 0.0f),
-            new TextureCoord(1.0f, 0.0f)
-        ), // bottom right
-        new Vertex(
-            new VertexPosition(-0.5f, -0.5f, 0.0f),
-            new VertexColor(0.0f, 0.0f, 1.0f),
-            new TextureCoord(0.0f, 0.0f)
-        ), // bottom left
-        new Vertex(
-            new VertexPosition(-0.5f, 0.5f, 0.0f),
-            new VertexColor(1.0f, 1.0f, 0.0f),
-            new TextureCoord(0.0f, 1.0f)
-        ) // top left
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(0.0f, 1.0f))
     };
 
-    private static readonly uint[] indices = { 0, 1, 2, 0, 2, 3 };
+    private static readonly Transform[] cubeTransforms =
+    {
+        new Transform { Translation = new Vector3D<float>(0.0f, 0.0f, 0.0f) },
+        new Transform { Translation = new Vector3D<float>(2.0f, 5.0f, -15.0f) },
+        new Transform { Translation = new Vector3D<float>(-1.5f, -2.2f, -2.5f) },
+        new Transform { Translation = new Vector3D<float>(-3.8f, -2.0f, -12.3f) },
+        new Transform { Translation = new Vector3D<float>(2.4f, -0.4f, -3.5f) },
+        new Transform { Translation = new Vector3D<float>(-1.7f, 3.0f, -7.5f) },
+        new Transform { Translation = new Vector3D<float>(1.3f, -2.0f, -2.5f) },
+        new Transform { Translation = new Vector3D<float>(1.5f, 2.0f, -2.5f) },
+        new Transform { Translation = new Vector3D<float>(1.5f, 0.2f, -1.5f) },
+        new Transform { Translation = new Vector3D<float>(-1.3f, 1.0f, -1.5f) },
+    };
 
     private static VertexArrayObject<Vertex, uint> vao;
     private static BufferObject<Vertex> vbo;
-    private static BufferObject<uint> ebo;
     private static ShaderProgram shader;
     private static Texture texture;
     private static bool polygonModeToggle = false;
-    private static float mixValue = 0.0f;
-    private static readonly Transform transform1 = new();
-    private static readonly Transform transform2 = new();
 
     private static IWindow CreateWindow()
     {
         var options = WindowOptions.Default;
         options.Size = new Vector2D<int>(1600, 1600);
         options.Title = "Hello OpenGL with Silk.NET";
+        options.PreferredDepthBufferBits = 24;
 
         var window = Window.Create(options);
         window.Load += OnLoad;
@@ -139,27 +164,14 @@ internal class Program
                     );
                     polygonModeToggle = !polygonModeToggle;
                 }
-                else if (key == Key.Left)
-                {
-                    mixValue -= 0.1f;
-                    mixValue = mixValue < 0.0f ? 0.0f : mixValue;
-                    shader.Set("mixValue", mixValue);
-                }
-                else if (key == Key.Right)
-                {
-                    mixValue += 0.1f;
-                    mixValue = mixValue > 1.0f ? 1.0f : mixValue;
-                    shader.Set("mixValue", mixValue);
-                }
             };
         }
 
         Gl = GL.GetApi(window);
 
         vbo = new BufferObject<Vertex>(Gl, vertices, BufferTargetARB.ArrayBuffer);
-        ebo = new BufferObject<uint>(Gl, indices, BufferTargetARB.ElementArrayBuffer);
 
-        vao = new VertexArrayObject<Vertex, uint>(Gl, vbo, ebo);
+        vao = new VertexArrayObject<Vertex, uint>(Gl, vbo);
         vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
         vao.VertexAttributePointer(
             1,
@@ -169,56 +181,55 @@ internal class Program
         );
 
         shader = ShaderProgram.FromFiles(Gl, "shader.vs", "shader.fs");
-        shader.Set("transform", Matrix4X4<float>.Identity);
 
         texture = Texture.FromFile(Gl, "wall.jpg");
         shader.Set("texture1", 0);
+
+        Gl.Enable(EnableCap.DepthTest);
+
+        var view = Matrix4X4.CreateTranslation(0.0f, 0.0f, -3.0f);
+        var projection = Matrix4X4.CreatePerspectiveFieldOfView(
+            45.0f.ToRadians(),
+            (float)window.Size.X / window.Size.Y,
+            0.1f,
+            100.0f
+        );
+        shader.Set("view", view);
+        shader.Set("projection", projection);
     }
 
     private static void OnUpdate(double deltaTime)
     {
-        transform1.Rotation = Quaternion<float>.CreateFromAxisAngle(
-            Vector3D<float>.UnitZ,
-            (float)(window.Time)
-        );
-        transform1.Translation = new Vector3D<float>(0.5f, -0.5f, 0.0f);
-
-        transform2.Scale = 0.5f * MathF.Sin((float)window.Time) + 0.5f;
-        transform2.Translation = new Vector3D<float>(-0.5f, 0.5f, 0.0f);
+        for (int i = 0; i < cubeTransforms.Length; i++)
+        {
+            float angle = 20.0f * i;
+            cubeTransforms[i].Rotation = Quaternion<float>.CreateFromAxisAngle(
+                Vector3D.Normalize(new Vector3D<float>(1.0f, 0.3f, 0.5f)),
+                angle.ToRadians()
+            );
+        }
     }
 
     private static unsafe void OnRender(double deltaTime)
     {
         Gl.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        Gl.Clear(ClearBufferMask.ColorBufferBit);
+        Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
         vao.Bind();
         shader.Use();
-
         texture.Use(TextureUnit.Texture0);
 
-        shader.Set("transform", transform1.Matrix);
-        Gl.DrawElements(
-            PrimitiveType.Triangles,
-            (uint)indices.Length,
-            DrawElementsType.UnsignedInt,
-            null
-        );
-
-        shader.Set("transform", transform2.Matrix);
-        Gl.DrawElements(
-            PrimitiveType.Triangles,
-            (uint)indices.Length,
-            DrawElementsType.UnsignedInt,
-            null
-        );
+        foreach (var cubeTransform in cubeTransforms)
+        {
+            shader.Set("model", cubeTransform.Matrix);
+            Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)vertices.Length);
+        }
     }
 
     private static void OnClose()
     {
         vao.Dispose();
         vbo.Dispose();
-        ebo.Dispose();
         shader.Dispose();
         texture.Dispose();
     }
