@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -66,6 +67,8 @@ struct Vertex
 internal class Program
 {
     private static readonly IWindow window = CreateWindow();
+    private static readonly KeyState keyState = new();
+    private static readonly MouseState mouseState = new();
     private static GL Gl;
 
     private static readonly Vertex[] vertices =
@@ -122,6 +125,8 @@ internal class Program
         new Transform { Translation = new Vector3D<float>(-1.3f, 1.0f, -1.5f) },
     };
 
+    private static readonly Camera camera = new(new(1600, 1600));
+
     private static VertexArrayObject<Vertex, uint> vao;
     private static BufferObject<Vertex> vbo;
     private static ShaderProgram shader;
@@ -150,21 +155,32 @@ internal class Program
         var input = window.CreateInput();
         foreach (var keyboard in input.Keyboards)
         {
-            keyboard.KeyDown += (keyboard, key, _) =>
+            keyboard.KeyDown += (_, key, _) =>
             {
-                if (key == Key.Escape)
+                keyState.KeyDown(key);
+                switch (key)
                 {
-                    window.Close();
-                }
-                else if (key == Key.Space || key == Key.Enter)
-                {
-                    Gl.PolygonMode(
-                        MaterialFace.FrontAndBack,
-                        polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
-                    );
-                    polygonModeToggle = !polygonModeToggle;
+                    case Key.Escape:
+                        window.Close();
+                        break;
+                    case Key.Space:
+                    case Key.Enter:
+                        Gl.PolygonMode(
+                            MaterialFace.FrontAndBack,
+                            polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
+                        );
+                        polygonModeToggle = !polygonModeToggle;
+                        break;
                 }
             };
+            keyboard.KeyUp += (_, key, _) => keyState.KeyUp(key);
+        }
+        foreach (var mouse in input.Mice)
+        {
+            mouse.Cursor.CursorMode = CursorMode.Raw;
+            mouse.MouseMove += (_, position) => mouseState.MouseMove(position);
+            mouse.Scroll += (_, delta) =>
+                mouseState.MouseScroll(delta.Y > 0 ? ScrollDirection.Up : ScrollDirection.Down);
         }
 
         Gl = GL.GetApi(window);
@@ -186,28 +202,23 @@ internal class Program
         shader.Set("texture1", 0);
 
         Gl.Enable(EnableCap.DepthTest);
-
-        var view = Matrix4X4.CreateTranslation(0.0f, 0.0f, -3.0f);
-        var projection = Matrix4X4.CreatePerspectiveFieldOfView(
-            45.0f.ToRadians(),
-            (float)window.Size.X / window.Size.Y,
-            0.1f,
-            100.0f
-        );
-        shader.Set("view", view);
-        shader.Set("projection", projection);
     }
 
     private static void OnUpdate(double deltaTime)
     {
         for (int i = 0; i < cubeTransforms.Length; i++)
         {
-            float angle = 20.0f * i;
+            float angle = 20.0f * (i + 1) * (float)window.Time;
             cubeTransforms[i].Rotation = Quaternion<float>.CreateFromAxisAngle(
                 Vector3D.Normalize(new Vector3D<float>(1.0f, 0.3f, 0.5f)),
                 angle.ToRadians()
             );
         }
+
+        camera.Update(deltaTime, keyState, mouseState);
+
+        shader.Set("view", camera.ViewMatrix);
+        shader.Set("projection", camera.ProjectionMatrix);
     }
 
     private static unsafe void OnRender(double deltaTime)
@@ -234,7 +245,11 @@ internal class Program
         texture.Dispose();
     }
 
-    private static void OnResize(Vector2D<int> size) => Gl.Viewport(size);
+    private static void OnResize(Vector2D<int> size)
+    {
+        Gl.Viewport(size);
+        camera.WindowSize = size;
+    }
 
     private static void Main()
     {
