@@ -55,12 +55,10 @@ internal struct VertexPosition
 struct Vertex
 {
     public VertexPosition position;
-    public TextureCoord textureCoord;
 
-    public Vertex(VertexPosition position, TextureCoord textureCoord)
+    public Vertex(VertexPosition position)
     {
         this.position = position;
-        this.textureCoord = textureCoord;
     }
 }
 
@@ -73,65 +71,55 @@ internal class Program
 
     private static readonly Vertex[] vertices =
     {
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new TextureCoord(1.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new TextureCoord(1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new TextureCoord(0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new TextureCoord(0.0f, 1.0f))
-    };
-
-    private static readonly Transform[] cubeTransforms =
-    {
-        new Transform { Translation = new Vector3D<float>(0.0f, 0.0f, 0.0f) },
-        new Transform { Translation = new Vector3D<float>(2.0f, 5.0f, -15.0f) },
-        new Transform { Translation = new Vector3D<float>(-1.5f, -2.2f, -2.5f) },
-        new Transform { Translation = new Vector3D<float>(-3.8f, -2.0f, -12.3f) },
-        new Transform { Translation = new Vector3D<float>(2.4f, -0.4f, -3.5f) },
-        new Transform { Translation = new Vector3D<float>(-1.7f, 3.0f, -7.5f) },
-        new Transform { Translation = new Vector3D<float>(1.3f, -2.0f, -2.5f) },
-        new Transform { Translation = new Vector3D<float>(1.5f, 2.0f, -2.5f) },
-        new Transform { Translation = new Vector3D<float>(1.5f, 0.2f, -1.5f) },
-        new Transform { Translation = new Vector3D<float>(-1.3f, 1.0f, -1.5f) },
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f))
     };
 
     private static readonly Camera camera = new(new(1600, 1600));
 
-    private static VertexArrayObject<Vertex, uint> vao;
-    private static BufferObject<Vertex> vbo;
-    private static ShaderProgram shader;
-    private static Texture texture;
+    private static VertexArrayObject<Vertex, uint> modelVao;
+    private static VertexArrayObject<Vertex, uint> lightVao;
+    private static BufferObject<Vertex> boxVbo;
+    private static ShaderProgram modelShader;
+    private static ShaderProgram lightShader;
     private static bool polygonModeToggle = false;
+
+    private static readonly Transform lightTransform =
+        new() { Translation = new Vector3D<float>(1.2f, 1.0f, 2.0f), Scale = 0.2f };
 
     private static IWindow CreateWindow()
     {
@@ -185,64 +173,57 @@ internal class Program
 
         Gl = GL.GetApi(window);
 
-        vbo = new BufferObject<Vertex>(Gl, vertices, BufferTargetARB.ArrayBuffer);
+        boxVbo = new BufferObject<Vertex>(Gl, vertices, BufferTargetARB.ArrayBuffer);
 
-        vao = new VertexArrayObject<Vertex, uint>(Gl, vbo);
-        vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
-        vao.VertexAttributePointer(
-            1,
-            2,
-            VertexAttribPointerType.Float,
-            offset: sizeof(VertexPosition)
-        );
+        modelVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
+        modelVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
 
-        shader = ShaderProgram.FromFiles(Gl, "shader.vs", "shader.fs");
+        lightVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
+        lightVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
 
-        texture = Texture.FromFile(Gl, "wall.jpg");
-        shader.Set("texture1", 0);
+        modelShader = ShaderProgram.FromFiles(Gl, "shader.vs", "model.fs");
+        modelShader.Set("objectColor", 1.0f, 0.5f, 0.31f);
+        modelShader.Set("lightColor", 1.0f, 1.0f, 1.0f);
+
+        lightShader = ShaderProgram.FromFiles(Gl, "shader.vs", "light.fs");
 
         Gl.Enable(EnableCap.DepthTest);
     }
 
     private static void OnUpdate(double deltaTime)
     {
-        for (int i = 0; i < cubeTransforms.Length; i++)
-        {
-            float angle = 20.0f * (i + 1) * (float)window.Time;
-            cubeTransforms[i].Rotation = Quaternion<float>.CreateFromAxisAngle(
-                Vector3D.Normalize(new Vector3D<float>(1.0f, 0.3f, 0.5f)),
-                angle.ToRadians()
-            );
-        }
-
         camera.Update(deltaTime, keyState, mouseState);
 
-        shader.Set("view", camera.ViewMatrix);
-        shader.Set("projection", camera.ProjectionMatrix);
+        modelShader.Set("model", Matrix4X4<float>.Identity);
+        modelShader.Set("view", camera.ViewMatrix);
+        modelShader.Set("projection", camera.ProjectionMatrix);
+
+        lightShader.Set("model", lightTransform.Matrix);
+        lightShader.Set("view", camera.ViewMatrix);
+        lightShader.Set("projection", camera.ProjectionMatrix);
     }
 
     private static unsafe void OnRender(double deltaTime)
     {
-        Gl.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        Gl.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
-        vao.Bind();
-        shader.Use();
-        texture.Use(TextureUnit.Texture0);
+        modelVao.Bind();
+        modelShader.Use();
+        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)vertices.Length);
 
-        foreach (var cubeTransform in cubeTransforms)
-        {
-            shader.Set("model", cubeTransform.Matrix);
-            Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)vertices.Length);
-        }
+        lightVao.Bind();
+        lightShader.Use();
+        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)vertices.Length);
     }
 
     private static void OnClose()
     {
-        vao.Dispose();
-        vbo.Dispose();
-        shader.Dispose();
-        texture.Dispose();
+        modelVao.Dispose();
+        lightVao.Dispose();
+        boxVbo.Dispose();
+        modelShader.Dispose();
+        lightShader.Dispose();
     }
 
     private static void OnResize(Vector2D<int> size)

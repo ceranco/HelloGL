@@ -74,8 +74,22 @@ internal class ShaderProgram : IDisposable
         Gl.Uniform1(location, value);
     }
 
+    public void Set(string name, float x, float y, float z) => Set(name, new Vector3(x, y, z));
+
+    public void Set(string name, Vector3 value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        Gl.Uniform3(location, ref value);
+    }
+
     public void Set(string name, float x, float y, float z, float w) =>
-        Set(name, new Vector4(x, y, z, y));
+        Set(name, new Vector4(x, y, z, w));
 
     public void Set(string name, Vector4 value)
     {
