@@ -70,6 +70,7 @@ internal class Program
         options.Title = "Hello OpenGL with Silk.NET";
         options.PreferredDepthBufferBits = 24;
         options.Samples = 8;
+        options.VSync = false;
 
         var window = Window.Create(options);
         window.Load += OnLoad;
@@ -77,9 +78,15 @@ internal class Program
         window.Render += OnRender;
         window.Closing += OnClose;
         window.Resize += OnResize;
+        window.FocusChanged += OnFocusChanged;
+        window.StateChanged += OnStateChanged;
 
         return window;
     }
+
+    private static void OnStateChanged(WindowState state) => camera.ResetMouse();
+
+    private static void OnFocusChanged(bool obj) => camera.ResetMouse();
 
     private static unsafe void OnLoad()
     {
@@ -96,10 +103,10 @@ internal class Program
                         break;
                     case Key.Space:
                     case Key.Enter:
-                        // Gl.PolygonMode(
-                        //     MaterialFace.FrontAndBack,
-                        //     polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
-                        // );
+                        Gl.PolygonMode(
+                            MaterialFace.FrontAndBack,
+                            polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
+                        );
                         polygonModeToggle = !polygonModeToggle;
                         break;
                 }
@@ -150,8 +157,7 @@ internal class Program
             MathF.Sin((float)window.Time) * 2f
         );
 
-        modelShader.Set("model", (Matrix4X4<float>)Matrix4X4.CreateRotationY(window.Time) * 0.5f);
-        // modelShader.Set("model", Matrix4X4<float>.Identity);
+        modelShader.Set("model", Matrix4X4<float>.Identity);
         modelShader.Set("view", camera.ViewMatrix);
         modelShader.Set("projection", camera.ProjectionMatrix);
         modelShader.Set("lightPos", lightTransform.Translation);

@@ -38,6 +38,8 @@ internal class Camera
             100f
         );
 
+    public void ResetMouse() => lastMousePosition = null;
+
     public void Update(double delta, KeyState keyState, MouseState mouseState)
     {
         UpdateMouse(mouseState);
