@@ -76,6 +76,9 @@ internal class ShaderProgram : IDisposable
 
     public void Set(string name, float x, float y, float z) => Set(name, new Vector3(x, y, z));
 
+    public void Set(string name, Vector3D<float> value) =>
+        Set(name, new Vector3(value.X, value.Y, value.Z));
+
     public void Set(string name, Vector3 value)
     {
         int location = Gl.GetUniformLocation(shaderProgram, name);

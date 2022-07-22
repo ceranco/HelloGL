@@ -9,7 +9,7 @@ internal class Camera
     private const float MovementSpeed = 2.5f;
     private const float MouseSensitivity = 0.05f;
 
-    private Vector3D<float> position;
+    public Vector3D<float> Position { get; private set; }
     private Vector3D<float> front = new(0, 0, -1);
     private static readonly Vector3D<float> up = new(0f, 1f, 0f);
 
@@ -25,10 +25,10 @@ internal class Camera
     public Camera(Vector2D<int> windowSize, Vector3D<float> position)
     {
         WindowSize = windowSize;
-        this.position = position;
+        this.Position = position;
     }
 
-    public Matrix4X4<float> ViewMatrix => Matrix4X4.CreateLookAt(position, position + front, up);
+    public Matrix4X4<float> ViewMatrix => Matrix4X4.CreateLookAt(Position, Position + front, up);
 
     public Matrix4X4<float> ProjectionMatrix =>
         Matrix4X4.CreatePerspectiveFieldOfView(
@@ -78,8 +78,12 @@ internal class Camera
         int frontFactor =
             (keyState.IsKeyDown(Key.W) ? 1 : 0) + (keyState.IsKeyDown(Key.S) ? -1 : 0);
         int sideFactor = (keyState.IsKeyDown(Key.D) ? 1 : 0) + (keyState.IsKeyDown(Key.A) ? -1 : 0);
+        int upFactor =
+            (keyState.IsKeyDown(Key.ShiftLeft) ? 1 : 0)
+            + (keyState.IsKeyDown(Key.ControlLeft) ? -1 : 0);
 
-        position += speed * front * frontFactor;
-        position += speed * Vector3D.Normalize(Vector3D.Cross(front, up)) * sideFactor;
+        Position += speed * front * frontFactor;
+        Position += speed * Vector3D.Normalize(Vector3D.Cross(front, up)) * sideFactor;
+        Position += speed * up * upFactor;
     }
 }

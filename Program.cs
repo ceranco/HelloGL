@@ -1,66 +1,9 @@
 ﻿#nullable disable
 
-using System.Numerics;
-using System.Runtime.InteropServices;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using StbImageSharp;
-
-[StructLayout(LayoutKind.Sequential, Pack = 0)]
-struct TextureCoord
-{
-    public float x;
-    public float y;
-
-    public TextureCoord(float x, float y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-}
-
-[StructLayout(LayoutKind.Sequential, Pack = 0)]
-struct VertexColor
-{
-    public float r;
-    public float g;
-    public float b;
-
-    public VertexColor(float r, float g, float b)
-    {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-    }
-}
-
-[StructLayout(LayoutKind.Sequential, Pack = 0)]
-internal struct VertexPosition
-{
-    public float x;
-    public float y;
-    public float z;
-
-    public VertexPosition(float x, float y, float z)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-[StructLayout(LayoutKind.Sequential, Pack = 0)]
-struct Vertex
-{
-    public VertexPosition position;
-
-    public Vertex(VertexPosition position)
-    {
-        this.position = position;
-    }
-}
 
 internal class Program
 {
@@ -71,45 +14,45 @@ internal class Program
 
     private static readonly Vertex[] vertices =
     {
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f))
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
+        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
+        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 1.0f, 0.0f))
     };
 
-    private static readonly Camera camera = new(new(1600, 1600));
+    private static readonly Camera camera = new(new(1600, 1600), new(0, 0, 5));
 
     private static VertexArrayObject<Vertex, uint> modelVao;
     private static VertexArrayObject<Vertex, uint> lightVao;
@@ -118,8 +61,7 @@ internal class Program
     private static ShaderProgram lightShader;
     private static bool polygonModeToggle = false;
 
-    private static readonly Transform lightTransform =
-        new() { Translation = new Vector3D<float>(1.2f, 1.0f, 2.0f), Scale = 0.2f };
+    private static readonly Transform lightTransform = new() { Scale = 0.2f };
 
     private static IWindow CreateWindow()
     {
@@ -127,6 +69,7 @@ internal class Program
         options.Size = new Vector2D<int>(1600, 1600);
         options.Title = "Hello OpenGL with Silk.NET";
         options.PreferredDepthBufferBits = 24;
+        options.Samples = 8;
 
         var window = Window.Create(options);
         window.Load += OnLoad;
@@ -153,10 +96,10 @@ internal class Program
                         break;
                     case Key.Space:
                     case Key.Enter:
-                        Gl.PolygonMode(
-                            MaterialFace.FrontAndBack,
-                            polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
-                        );
+                        // Gl.PolygonMode(
+                        //     MaterialFace.FrontAndBack,
+                        //     polygonModeToggle ? PolygonMode.Fill : PolygonMode.Line
+                        // );
                         polygonModeToggle = !polygonModeToggle;
                         break;
                 }
@@ -177,15 +120,22 @@ internal class Program
 
         modelVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
         modelVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
+        modelVao.VertexAttributePointer(
+            1,
+            3,
+            VertexAttribPointerType.Float,
+            1,
+            sizeof(VertexPosition)
+        );
 
         lightVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
         lightVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
 
-        modelShader = ShaderProgram.FromFiles(Gl, "shader.vs", "model.fs");
+        modelShader = ShaderProgram.FromFiles(Gl, "model.vs", "model.fs");
         modelShader.Set("objectColor", 1.0f, 0.5f, 0.31f);
         modelShader.Set("lightColor", 1.0f, 1.0f, 1.0f);
 
-        lightShader = ShaderProgram.FromFiles(Gl, "shader.vs", "light.fs");
+        lightShader = ShaderProgram.FromFiles(Gl, "light.vs", "light.fs");
 
         Gl.Enable(EnableCap.DepthTest);
     }
@@ -194,9 +144,18 @@ internal class Program
     {
         camera.Update(deltaTime, keyState, mouseState);
 
-        modelShader.Set("model", Matrix4X4<float>.Identity);
+        lightTransform.Translation = new(
+            MathF.Cos((float)window.Time) * 2f,
+            1f,
+            MathF.Sin((float)window.Time) * 2f
+        );
+
+        modelShader.Set("model", (Matrix4X4<float>)Matrix4X4.CreateRotationY(window.Time) * 0.5f);
+        // modelShader.Set("model", Matrix4X4<float>.Identity);
         modelShader.Set("view", camera.ViewMatrix);
         modelShader.Set("projection", camera.ProjectionMatrix);
+        modelShader.Set("lightPos", lightTransform.Translation);
+        modelShader.Set("viewPos", camera.Position);
 
         lightShader.Set("model", lightTransform.Matrix);
         lightShader.Set("view", camera.ViewMatrix);
