@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Numerics;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -60,6 +61,7 @@ internal class Program
     private static ShaderProgram modelShader;
     private static ShaderProgram lightShader;
     private static bool polygonModeToggle = false;
+    private static int material = 0;
 
     private static readonly Transform lightTransform = new() { Scale = 0.2f };
 
@@ -109,6 +111,14 @@ internal class Program
                         );
                         polygonModeToggle = !polygonModeToggle;
                         break;
+                    case Key.Right:
+                        material = (material + 1) % Material.All.Length;
+                        Console.WriteLine($"Material: {Material.All[material].Name}");
+                        break;
+                    case Key.Left:
+                        material = (material - 1) % Material.All.Length;
+                        Console.WriteLine($"Material: {Material.All[material].Name}");
+                        break;
                 }
             };
             keyboard.KeyUp += (_, key, _) => keyState.KeyUp(key);
@@ -139,8 +149,9 @@ internal class Program
         lightVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
 
         modelShader = ShaderProgram.FromFiles(Gl, "model.vs", "model.fs");
-        modelShader.Set("objectColor", 1.0f, 0.5f, 0.31f);
-        modelShader.Set("lightColor", 1.0f, 1.0f, 1.0f);
+        modelShader.Set("light.ambient", 0.2f, 0.2f, 0.2f);
+        modelShader.Set("light.diffuse", 0.5f, 0.5f, 0.5f);
+        modelShader.Set("light.specular", 1.0f, 1.0f, 1.0f);
 
         lightShader = ShaderProgram.FromFiles(Gl, "light.vs", "light.fs");
 
@@ -156,16 +167,33 @@ internal class Program
             1f,
             MathF.Sin((float)window.Time) * 2f
         );
+        Vector3 lightColor =
+            new(
+                // MathF.Sin((float)(window.Time) * 0.2f),
+                // MathF.Sin((float)(window.Time) * 0.7f),
+                // MathF.Sin((float)(window.Time) * 1.3f)
+                1f,
+                1f,
+                1f
+            );
 
         modelShader.Set("model", Matrix4X4<float>.Identity);
         modelShader.Set("view", camera.ViewMatrix);
         modelShader.Set("projection", camera.ProjectionMatrix);
-        modelShader.Set("lightPos", lightTransform.Translation);
+        modelShader.Set("light.ambient", lightColor * 0.2f);
+        modelShader.Set("light.diffuse", lightColor * 0.5f);
+        modelShader.Set("light.position", lightTransform.Translation);
         modelShader.Set("viewPos", camera.Position);
+        modelShader.Set(
+            "material",
+            Material.All[material]
+        // new Material(new(1f, 0.5f, 0.31f), new(1f, 0.5f, 0.31f), new(0.5f, 0.5f, 0.5f), 32f)
+        );
 
         lightShader.Set("model", lightTransform.Matrix);
         lightShader.Set("view", camera.ViewMatrix);
         lightShader.Set("projection", camera.ProjectionMatrix);
+        lightShader.Set("lightColor", lightColor);
     }
 
     private static unsafe void OnRender(double deltaTime)

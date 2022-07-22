@@ -121,22 +121,32 @@ internal class ShaderProgram : IDisposable
         }
     }
 
+    public void Set(string name, Material material)
+    {
+        Set($"{name}.ambient", material.Ambient);
+        Set($"{name}.diffuse", material.Diffuse);
+        Set($"{name}.specular", material.Specular);
+        Set($"{name}.shininess", material.Shininess);
+    }
+
     public void Dispose() => Gl.DeleteProgram(shaderProgram);
 
     private void CheckShaderCompilation(uint shader, string errorMsgFormat)
     {
-        string infoLog = Gl.GetShaderInfoLog(shader);
-        if (!string.IsNullOrWhiteSpace(infoLog))
+        Gl.GetShader(shader, ShaderParameterName.CompileStatus, out int status);
+        if (status == 0)
         {
+            string infoLog = Gl.GetShaderInfoLog(shader);
             throw new ShaderError(string.Format(errorMsgFormat, infoLog));
         }
     }
 
     private void CheckShaderLinking(string errorMsgFormat)
     {
-        string infoLog = Gl.GetProgramInfoLog(shaderProgram);
-        if (!string.IsNullOrWhiteSpace(infoLog))
+        Gl.GetProgram(shaderProgram, ProgramPropertyARB.LinkStatus, out int status);
+        if (status == 0)
         {
+            string infoLog = Gl.GetProgramInfoLog(shaderProgram);
             throw new ShaderError(string.Format(errorMsgFormat, infoLog));
         }
     }
