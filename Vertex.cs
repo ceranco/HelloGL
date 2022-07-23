@@ -7,21 +7,207 @@ struct Vertex
 {
     public VertexPosition position;
     public VertexNormal normal;
+    public TextureCoords coords;
 
-    public Vertex(VertexPosition position, VertexNormal normal)
+    public Vertex(VertexPosition position, VertexNormal normal, TextureCoords coords)
     {
         this.position = position;
         this.normal = normal;
+        this.coords = coords;
     }
+
+    public static readonly Vertex[] Cube =
+    {
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, -0.5f),
+            new VertexNormal(0.0f, 0.0f, -1.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, -0.5f),
+            new VertexNormal(0.0f, 0.0f, -1.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, -0.5f),
+            new VertexNormal(0.0f, 0.0f, -1.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, -0.5f),
+            new VertexNormal(0.0f, 0.0f, -1.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, -0.5f),
+            new VertexNormal(0.0f, 0.0f, -1.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, -0.5f),
+            new VertexNormal(0.0f, 0.0f, -1.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, 0.5f),
+            new VertexNormal(0.0f, 0.0f, 1.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, 0.5f),
+            new VertexNormal(0.0f, 0.0f, 1.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, 0.5f),
+            new VertexNormal(0.0f, 0.0f, 1.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, 0.5f),
+            new VertexNormal(0.0f, 0.0f, 1.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, 0.5f),
+            new VertexNormal(0.0f, 0.0f, 1.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, 0.5f),
+            new VertexNormal(0.0f, 0.0f, 1.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, 0.5f),
+            new VertexNormal(-1.0f, 0.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, -0.5f),
+            new VertexNormal(-1.0f, 0.0f, 0.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, -0.5f),
+            new VertexNormal(-1.0f, 0.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, -0.5f),
+            new VertexNormal(-1.0f, 0.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, 0.5f),
+            new VertexNormal(-1.0f, 0.0f, 0.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, 0.5f),
+            new VertexNormal(-1.0f, 0.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, 0.5f),
+            new VertexNormal(1.0f, 0.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, -0.5f),
+            new VertexNormal(1.0f, 0.0f, 0.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, -0.5f),
+            new VertexNormal(1.0f, 0.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, -0.5f),
+            new VertexNormal(1.0f, 0.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, 0.5f),
+            new VertexNormal(1.0f, 0.0f, 0.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, 0.5f),
+            new VertexNormal(1.0f, 0.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, -0.5f),
+            new VertexNormal(0.0f, -1.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, -0.5f),
+            new VertexNormal(0.0f, -1.0f, 0.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, 0.5f),
+            new VertexNormal(0.0f, -1.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, -0.5f, 0.5f),
+            new VertexNormal(0.0f, -1.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, 0.5f),
+            new VertexNormal(0.0f, -1.0f, 0.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, -0.5f, -0.5f),
+            new VertexNormal(0.0f, -1.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, -0.5f),
+            new VertexNormal(0.0f, 1.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, -0.5f),
+            new VertexNormal(0.0f, 1.0f, 0.0f),
+            new TextureCoords(1.0f, 1.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, 0.5f),
+            new VertexNormal(0.0f, 1.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(0.5f, 0.5f, 0.5f),
+            new VertexNormal(0.0f, 1.0f, 0.0f),
+            new TextureCoords(1.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, 0.5f),
+            new VertexNormal(0.0f, 1.0f, 0.0f),
+            new TextureCoords(0.0f, 0.0f)
+        ),
+        new Vertex(
+            new VertexPosition(-0.5f, 0.5f, -0.5f),
+            new VertexNormal(0.0f, 1.0f, 0.0f),
+            new TextureCoords(0.0f, 1.0f)
+        )
+    };
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-struct TextureCoord
+struct TextureCoords
 {
     public float x;
     public float y;
 
-    public TextureCoord(float x, float y)
+    public TextureCoords(float x, float y)
     {
         this.x = x;
         this.y = y;

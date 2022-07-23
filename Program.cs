@@ -12,47 +12,6 @@ internal class Program
     private static readonly KeyState keyState = new();
     private static readonly MouseState mouseState = new();
     private static GL Gl;
-
-    private static readonly Vertex[] vertices =
-    {
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, 0.0f, -1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, 0.0f, 1.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(-1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(1.0f, 0.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, 0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, -0.5f, -0.5f), new VertexNormal(0.0f, -1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
-        new Vertex(new VertexPosition(0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, 0.5f), new VertexNormal(0.0f, 1.0f, 0.0f)),
-        new Vertex(new VertexPosition(-0.5f, 0.5f, -0.5f), new VertexNormal(0.0f, 1.0f, 0.0f))
-    };
-
     private static readonly Camera camera = new(new(1600, 1600), new(0, 0, 5));
 
     private static VertexArrayObject<Vertex, uint> modelVao;
@@ -60,6 +19,9 @@ internal class Program
     private static BufferObject<Vertex> boxVbo;
     private static ShaderProgram modelShader;
     private static ShaderProgram lightShader;
+    private static Texture diffuseMap;
+    private static Texture specularMap;
+    private static Texture emissionMap;
     private static bool polygonModeToggle = false;
     private static int material = 0;
 
@@ -133,7 +95,11 @@ internal class Program
 
         Gl = GL.GetApi(window);
 
-        boxVbo = new BufferObject<Vertex>(Gl, vertices, BufferTargetARB.ArrayBuffer);
+        diffuseMap = Texture.FromFile(Gl, "container.png");
+        specularMap = Texture.FromFile(Gl, "container_specular.png");
+        emissionMap = Texture.FromFile(Gl, "matrix.jpg");
+
+        boxVbo = new BufferObject<Vertex>(Gl, Vertex.Cube, BufferTargetARB.ArrayBuffer);
 
         modelVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
         modelVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
@@ -143,6 +109,13 @@ internal class Program
             VertexAttribPointerType.Float,
             1,
             sizeof(VertexPosition)
+        );
+        modelVao.VertexAttributePointer(
+            2,
+            2,
+            VertexAttribPointerType.Float,
+            1,
+            sizeof(VertexPosition) + sizeof(VertexNormal)
         );
 
         lightVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
@@ -186,9 +159,15 @@ internal class Program
         modelShader.Set("viewPos", camera.Position);
         modelShader.Set(
             "material",
-            Material.All[material]
+            new TexturedMaterial(
+                TextureUnit.Texture0,
+                TextureUnit.Texture1,
+                TextureUnit.Texture2,
+                32f
+            )
         // new Material(new(1f, 0.5f, 0.31f), new(1f, 0.5f, 0.31f), new(0.5f, 0.5f, 0.5f), 32f)
         );
+        modelShader.Set("time", (float)window.Time);
 
         lightShader.Set("model", lightTransform.Matrix);
         lightShader.Set("view", camera.ViewMatrix);
@@ -203,11 +182,14 @@ internal class Program
 
         modelVao.Bind();
         modelShader.Use();
-        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)vertices.Length);
+        diffuseMap.Use(TextureUnit.Texture0);
+        specularMap.Use(TextureUnit.Texture1);
+        emissionMap.Use(TextureUnit.Texture2);
+        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
 
         lightVao.Bind();
         lightShader.Use();
-        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)vertices.Length);
+        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
     }
 
     private static void OnClose()
@@ -217,6 +199,9 @@ internal class Program
         boxVbo.Dispose();
         modelShader.Dispose();
         lightShader.Dispose();
+        diffuseMap.Dispose();
+        specularMap.Dispose();
+        emissionMap.Dispose();
     }
 
     private static void OnResize(Vector2D<int> size)

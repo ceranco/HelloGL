@@ -74,6 +74,18 @@ internal class ShaderProgram : IDisposable
         Gl.Uniform1(location, value);
     }
 
+    public void Set(string name, TextureUnit value)
+    {
+        int location = Gl.GetUniformLocation(shaderProgram, name);
+        if (location == -1)
+        {
+            throw new ShaderError($"Couldn't find uniform: {name}");
+        }
+
+        Use();
+        Gl.Uniform1(location, (int)value - (int)TextureUnit.Texture0);
+    }
+
     public void Set(string name, float x, float y, float z) => Set(name, new Vector3(x, y, z));
 
     public void Set(string name, Vector3D<float> value) =>
@@ -126,6 +138,14 @@ internal class ShaderProgram : IDisposable
         Set($"{name}.ambient", material.Ambient);
         Set($"{name}.diffuse", material.Diffuse);
         Set($"{name}.specular", material.Specular);
+        Set($"{name}.shininess", material.Shininess);
+    }
+
+    public void Set(string name, TexturedMaterial material)
+    {
+        Set($"{name}.diffuse", material.Diffuse);
+        Set($"{name}.specular", material.Specular);
+        Set($"{name}.emission", material.Emission);
         Set($"{name}.shininess", material.Shininess);
     }
 
