@@ -26,6 +26,19 @@ internal class Program
     private static int material = 0;
 
     private static readonly Transform lightTransform = new() { Scale = 0.2f };
+    private static readonly Transform[] modelTransforms =
+    {
+        new() { Translation = new(0.0f, 0.0f, 0.0f) },
+        new() { Translation = new(2.0f, 5.0f, -15.0f) },
+        new() { Translation = new(-1.5f, -2.2f, -2.5f) },
+        new() { Translation = new(-3.8f, -2.0f, -12.3f) },
+        new() { Translation = new(2.4f, -0.4f, -3.5f) },
+        new() { Translation = new(-1.7f, 3.0f, -7.5f) },
+        new() { Translation = new(1.3f, -2.0f, -2.5f) },
+        new() { Translation = new(1.5f, 2.0f, -2.5f) },
+        new() { Translation = new(1.5f, 0.2f, -1.5f) },
+        new() { Translation = new(-1.3f, 1.0f, -1.5f) }
+    };
 
     private static IWindow CreateWindow()
     {
@@ -122,9 +135,14 @@ internal class Program
         lightVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
 
         modelShader = ShaderProgram.FromFiles(Gl, "model.vs", "model.fs");
+        modelShader.Set("light.cutOff", MathF.Cos(12.5f.ToRadians()));
+        modelShader.Set("light.outerCutOff", MathF.Cos(17.5f.ToRadians()));
         modelShader.Set("light.ambient", 0.2f, 0.2f, 0.2f);
         modelShader.Set("light.diffuse", 0.5f, 0.5f, 0.5f);
         modelShader.Set("light.specular", 1.0f, 1.0f, 1.0f);
+        modelShader.Set("light.constant", 1.0f);
+        modelShader.Set("light.linear", 0.09f);
+        modelShader.Set("light.quadratic", 0.032f);
 
         lightShader = ShaderProgram.FromFiles(Gl, "light.vs", "light.fs");
 
@@ -135,11 +153,6 @@ internal class Program
     {
         camera.Update(deltaTime, keyState, mouseState);
 
-        lightTransform.Translation = new(
-            MathF.Cos((float)window.Time) * 2f,
-            1f,
-            MathF.Sin((float)window.Time) * 2f
-        );
         Vector3 lightColor =
             new(
                 // MathF.Sin((float)(window.Time) * 0.2f),
@@ -150,12 +163,12 @@ internal class Program
                 1f
             );
 
-        modelShader.Set("model", Matrix4X4<float>.Identity);
         modelShader.Set("view", camera.ViewMatrix);
         modelShader.Set("projection", camera.ProjectionMatrix);
         modelShader.Set("light.ambient", lightColor * 0.2f);
         modelShader.Set("light.diffuse", lightColor * 0.5f);
-        modelShader.Set("light.position", lightTransform.Translation);
+        modelShader.Set("light.position", camera.Position);
+        modelShader.Set("light.direction", camera.Front);
         modelShader.Set("viewPos", camera.Position);
         modelShader.Set(
             "material",
@@ -167,12 +180,20 @@ internal class Program
             )
         // new Material(new(1f, 0.5f, 0.31f), new(1f, 0.5f, 0.31f), new(0.5f, 0.5f, 0.5f), 32f)
         );
-        modelShader.Set("time", (float)window.Time);
 
         lightShader.Set("model", lightTransform.Matrix);
         lightShader.Set("view", camera.ViewMatrix);
         lightShader.Set("projection", camera.ProjectionMatrix);
         lightShader.Set("lightColor", lightColor);
+
+        for (int i = 0; i < modelTransforms.Length; i++)
+        {
+            float angle = 20.0f * i;
+            modelTransforms[i].Rotation = Quaternion<float>.CreateFromAxisAngle(
+                Vector3D.Normalize<float>(new(1.0f, 0.3f, 0.5f)),
+                angle.ToRadians()
+            );
+        }
     }
 
     private static unsafe void OnRender(double deltaTime)
@@ -185,11 +206,16 @@ internal class Program
         diffuseMap.Use(TextureUnit.Texture0);
         specularMap.Use(TextureUnit.Texture1);
         emissionMap.Use(TextureUnit.Texture2);
-        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
 
-        lightVao.Bind();
-        lightShader.Use();
-        Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
+        foreach (var transform in modelTransforms)
+        {
+            modelShader.Set("model", transform.Matrix);
+            Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
+        }
+
+        // lightVao.Bind();
+        // lightShader.Use();
+        // Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
     }
 
     private static void OnClose()

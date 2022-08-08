@@ -10,7 +10,7 @@ internal class Camera
     private const float MouseSensitivity = 0.05f;
 
     public Vector3D<float> Position { get; private set; }
-    private Vector3D<float> front = new(0, 0, -1);
+    public Vector3D<float> Front { get; private set; } = new(0, 0, -1);
     private static readonly Vector3D<float> up = new(0f, 1f, 0f);
 
     private float yaw = -90f;
@@ -18,7 +18,17 @@ internal class Camera
     private Vector2? lastMousePosition = null;
 
     private float fov = 45f;
-    public Vector2D<int> WindowSize { get; set; }
+
+    private Vector2D<int> _windowSize;
+    public Vector2D<int> WindowSize
+    {
+        get => _windowSize;
+        set
+        {
+            _windowSize = value;
+            ResetMouse();
+        }
+    }
 
     public Camera(Vector2D<int> windowSize) : this(windowSize, new(0, 0, 3)) { }
 
@@ -28,7 +38,7 @@ internal class Camera
         this.Position = position;
     }
 
-    public Matrix4X4<float> ViewMatrix => Matrix4X4.CreateLookAt(Position, Position + front, up);
+    public Matrix4X4<float> ViewMatrix => Matrix4X4.CreateLookAt(Position, Position + Front, up);
 
     public Matrix4X4<float> ProjectionMatrix =>
         Matrix4X4.CreatePerspectiveFieldOfView(
@@ -65,7 +75,7 @@ internal class Camera
                 MathF.Sin(pitch.ToRadians()),
                 MathF.Sin(yaw.ToRadians()) * MathF.Cos(pitch.ToRadians())
             );
-            front = Vector3D.Normalize(direction);
+            Front = Vector3D.Normalize(direction);
         }
 
         foreach (var scrollEvent in mouseState.HandleScrollEvents())
@@ -84,8 +94,8 @@ internal class Camera
             (keyState.IsKeyDown(Key.ShiftLeft) ? 1 : 0)
             + (keyState.IsKeyDown(Key.ControlLeft) ? -1 : 0);
 
-        Position += speed * front * frontFactor;
-        Position += speed * Vector3D.Normalize(Vector3D.Cross(front, up)) * sideFactor;
+        Position += speed * Front * frontFactor;
+        Position += speed * Vector3D.Normalize(Vector3D.Cross(Front, up)) * sideFactor;
         Position += speed * up * upFactor;
     }
 }
