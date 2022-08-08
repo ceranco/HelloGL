@@ -149,6 +149,33 @@ internal class ShaderProgram : IDisposable
         Set($"{name}.shininess", material.Shininess);
     }
 
+    public void Set(string name, DirectionalLight light)
+    {
+        Set($"{name}.direction", light.Direction);
+        Set($"{name}.ambient", light.Ambient);
+        Set($"{name}.diffuse", light.Diffuse);
+        Set($"{name}.specular", light.Specular);
+    }
+
+    public void Set(string name, PointLight light)
+    {
+        Set($"{name}.position", light.Position);
+        Set($"{name}.ambient", light.Ambient);
+        Set($"{name}.diffuse", light.Diffuse);
+        Set($"{name}.specular", light.Specular);
+        Set($"{name}.constant", light.Constant);
+        Set($"{name}.linear", light.Linear);
+        Set($"{name}.quadratic", light.Quadratic);
+    }
+
+    public void Set(string name, PointLight[] lights)
+    {
+        for (int i = 0; i < lights.Length; i++)
+        {
+            Set($"{name}[{i}]", lights[i]);
+        }
+    }
+
     public void Dispose() => Gl.DeleteProgram(shaderProgram);
 
     private void CheckShaderCompilation(uint shader, string errorMsgFormat)

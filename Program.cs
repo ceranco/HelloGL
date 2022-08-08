@@ -25,7 +25,53 @@ internal class Program
     private static bool polygonModeToggle = false;
     private static int material = 0;
 
-    private static readonly Transform lightTransform = new() { Scale = 0.2f };
+    private static readonly DirectionalLight directionalLight =
+        new(
+            new(-0.2f, -1.0f, -0.3f),
+            new Vector3(1.0f) * 0.05f,
+            new Vector3(1.0f) * 0.4f,
+            new Vector3(1.0f) * 0.5f
+        );
+    private static readonly PointLight[] pointLights =
+    {
+        new(
+            new(0.7f, 0.2f, 2.0f),
+            new Vector3(1.0f) * 0.05f,
+            new Vector3(1.0f) * 0.8f,
+            new Vector3(1.0f),
+            1.0f,
+            0.09f,
+            0.032f
+        ),
+        new(
+            new(2.3f, -3.3f, -4.0f),
+            new Vector3(1.0f) * 0.05f,
+            new Vector3(1.0f) * 0.8f,
+            new Vector3(1.0f),
+            1.0f,
+            0.09f,
+            0.032f
+        ),
+        new(
+            new(-4.0f, 2.0f, -12.0f),
+            new Vector3(1.0f) * 0.05f,
+            new Vector3(1.0f) * 0.8f,
+            new Vector3(1.0f),
+            1.0f,
+            0.09f,
+            0.032f
+        ),
+        new(
+            new(0.0f, 0.0f, -3.0f),
+            new Vector3(1.0f) * 0.05f,
+            new Vector3(1.0f) * 0.8f,
+            new Vector3(1.0f),
+            1.0f,
+            0.09f,
+            0.032f
+        )
+    };
+
     private static readonly Transform[] modelTransforms =
     {
         new() { Translation = new(0.0f, 0.0f, 0.0f) },
@@ -135,14 +181,17 @@ internal class Program
         lightVao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float);
 
         modelShader = ShaderProgram.FromFiles(Gl, "model.vs", "model.fs");
-        modelShader.Set("light.cutOff", MathF.Cos(12.5f.ToRadians()));
-        modelShader.Set("light.outerCutOff", MathF.Cos(17.5f.ToRadians()));
-        modelShader.Set("light.ambient", 0.2f, 0.2f, 0.2f);
-        modelShader.Set("light.diffuse", 0.5f, 0.5f, 0.5f);
-        modelShader.Set("light.specular", 1.0f, 1.0f, 1.0f);
-        modelShader.Set("light.constant", 1.0f);
-        modelShader.Set("light.linear", 0.09f);
-        modelShader.Set("light.quadratic", 0.032f);
+        modelShader.Set("directionalLight", directionalLight);
+        modelShader.Set("pointLights", pointLights);
+        modelShader.Set(
+            "material",
+            new TexturedMaterial(
+                TextureUnit.Texture0,
+                TextureUnit.Texture1,
+                TextureUnit.Texture2,
+                32f
+            )
+        );
 
         lightShader = ShaderProgram.FromFiles(Gl, "light.vs", "light.fs");
 
@@ -153,38 +202,12 @@ internal class Program
     {
         camera.Update(deltaTime, keyState, mouseState);
 
-        Vector3 lightColor =
-            new(
-                // MathF.Sin((float)(window.Time) * 0.2f),
-                // MathF.Sin((float)(window.Time) * 0.7f),
-                // MathF.Sin((float)(window.Time) * 1.3f)
-                1f,
-                1f,
-                1f
-            );
-
         modelShader.Set("view", camera.ViewMatrix);
         modelShader.Set("projection", camera.ProjectionMatrix);
-        modelShader.Set("light.ambient", lightColor * 0.2f);
-        modelShader.Set("light.diffuse", lightColor * 0.5f);
-        modelShader.Set("light.position", camera.Position);
-        modelShader.Set("light.direction", camera.Front);
         modelShader.Set("viewPos", camera.Position);
-        modelShader.Set(
-            "material",
-            new TexturedMaterial(
-                TextureUnit.Texture0,
-                TextureUnit.Texture1,
-                TextureUnit.Texture2,
-                32f
-            )
-        // new Material(new(1f, 0.5f, 0.31f), new(1f, 0.5f, 0.31f), new(0.5f, 0.5f, 0.5f), 32f)
-        );
 
-        lightShader.Set("model", lightTransform.Matrix);
         lightShader.Set("view", camera.ViewMatrix);
         lightShader.Set("projection", camera.ProjectionMatrix);
-        lightShader.Set("lightColor", lightColor);
 
         for (int i = 0; i < modelTransforms.Length; i++)
         {
@@ -213,9 +236,17 @@ internal class Program
             Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
         }
 
-        // lightVao.Bind();
-        // lightShader.Use();
-        // Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
+        lightVao.Bind();
+        lightShader.Use();
+
+        foreach (var light in pointLights)
+        {
+            var scale = Matrix4X4.CreateScale(0.2f);
+            var translate = Matrix4X4.CreateTranslation(light.Position.ToVector3D());
+            lightShader.Set("model", scale * translate);
+            lightShader.Set("lightColor", light.Diffuse);
+            Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
+        }
     }
 
     private static void OnClose()
