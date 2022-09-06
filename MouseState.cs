@@ -1,9 +1,12 @@
 #nullable disable
 
 using System.Numerics;
+using Silk.NET.Input;
 
 internal class MouseState
 {
+    private readonly HashSet<MouseButton> buttonsDown = new();
+
     public Vector2? Position { get; private set; } = null;
     private List<ScrollDirection> scrollEvents = new();
 
@@ -18,6 +21,12 @@ internal class MouseState
 
         return events;
     }
+
+    public void ButtonDown(MouseButton button) => buttonsDown.Add(button);
+
+    public void ButtonUp(MouseButton button) => buttonsDown.Remove(button);
+
+    public bool IsButtonDown(MouseButton button) => buttonsDown.Contains(button);
 }
 
 internal enum ScrollDirection

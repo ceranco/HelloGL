@@ -21,9 +21,7 @@ internal class Program
     private static ShaderProgram lightShader;
     private static Texture diffuseMap;
     private static Texture specularMap;
-    private static Texture emissionMap;
     private static bool polygonModeToggle = false;
-    private static int material = 0;
 
     private static readonly DirectionalLight directionalLight =
         new(
@@ -132,14 +130,6 @@ internal class Program
                         );
                         polygonModeToggle = !polygonModeToggle;
                         break;
-                    case Key.Right:
-                        material = (material + 1) % Material.All.Length;
-                        Console.WriteLine($"Material: {Material.All[material].Name}");
-                        break;
-                    case Key.Left:
-                        material = (material - 1) % Material.All.Length;
-                        Console.WriteLine($"Material: {Material.All[material].Name}");
-                        break;
                 }
             };
             keyboard.KeyUp += (_, key, _) => keyState.KeyUp(key);
@@ -156,8 +146,6 @@ internal class Program
 
         diffuseMap = Texture.FromFile(Gl, "container.png");
         specularMap = Texture.FromFile(Gl, "container_specular.png");
-        emissionMap = Texture.FromFile(Gl, "matrix.jpg");
-
         boxVbo = new BufferObject<Vertex>(Gl, Vertex.Cube, BufferTargetARB.ArrayBuffer);
 
         modelVao = new VertexArrayObject<Vertex, uint>(Gl, boxVbo);
@@ -228,7 +216,6 @@ internal class Program
         modelShader.Use();
         diffuseMap.Use(TextureUnit.Texture0);
         specularMap.Use(TextureUnit.Texture1);
-        emissionMap.Use(TextureUnit.Texture2);
 
         foreach (var transform in modelTransforms)
         {
@@ -242,7 +229,7 @@ internal class Program
         foreach (var light in pointLights)
         {
             var scale = Matrix4X4.CreateScale(0.2f);
-            var translate = Matrix4X4.CreateTranslation(light.Position.ToVector3D());
+            var translate = Matrix4X4.CreateTranslation(light.Position.ToVectorD());
             lightShader.Set("model", scale * translate);
             lightShader.Set("lightColor", light.Diffuse);
             Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
@@ -258,7 +245,6 @@ internal class Program
         lightShader.Dispose();
         diffuseMap.Dispose();
         specularMap.Dispose();
-        emissionMap.Dispose();
     }
 
     private static void OnResize(Vector2D<int> size)

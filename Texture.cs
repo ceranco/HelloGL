@@ -20,7 +20,17 @@ internal class Texture : IDisposable
         return new Texture(Gl, image.Data, (uint)image.Width, (uint)image.Height, format);
     }
 
-    public Texture(GL Gl, Span<byte> data, uint width, uint height, GLEnum format)
+    public Texture(
+        GL Gl,
+        Span<byte> data,
+        uint width,
+        uint height,
+        GLEnum format,
+        GLEnum wrapS = GLEnum.ClampToEdge,
+        GLEnum wrapT = GLEnum.ClampToEdge,
+        GLEnum magFilter = GLEnum.Linear,
+        GLEnum minFilter = GLEnum.Linear
+    )
     {
         this.Gl = Gl;
 
@@ -38,25 +48,17 @@ internal class Texture : IDisposable
             data
         );
 
-        Gl.TexParameter(
-            TextureTarget.Texture2D,
-            TextureParameterName.TextureWrapS,
-            (int)GLEnum.ClampToEdge
-        );
-        Gl.TexParameter(
-            TextureTarget.Texture2D,
-            TextureParameterName.TextureWrapT,
-            (int)GLEnum.ClampToEdge
-        );
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)wrapS);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)wrapT);
         Gl.TexParameter(
             TextureTarget.Texture2D,
             TextureParameterName.TextureMinFilter,
-            (int)GLEnum.Linear
+            (int)minFilter
         );
         Gl.TexParameter(
             TextureTarget.Texture2D,
             TextureParameterName.TextureMagFilter,
-            (int)GLEnum.Linear
+            (int)magFilter
         );
         Gl.GenerateMipmap(TextureTarget.Texture2D);
     }
@@ -68,6 +70,8 @@ internal class Texture : IDisposable
     }
 
     public void Dispose() => Gl.DeleteTexture(texture);
+
+    public uint ID => texture;
 }
 
 internal static class ColorComponentsExtensions
