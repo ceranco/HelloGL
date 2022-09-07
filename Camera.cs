@@ -23,11 +23,7 @@ internal class Camera
     public Vector2D<int> WindowSize
     {
         get => _windowSize;
-        set
-        {
-            _windowSize = value;
-            ResetMouse();
-        }
+        set { _windowSize = value; }
     }
 
     public Camera(Vector2D<int> windowSize) : this(windowSize, new(0, 0, 3)) { }
@@ -35,7 +31,7 @@ internal class Camera
     public Camera(Vector2D<int> windowSize, Vector3D<float> position)
     {
         WindowSize = windowSize;
-        this.Position = position;
+        Position = position;
     }
 
     public Matrix4X4<float> ViewMatrix => Matrix4X4.CreateLookAt(Position, Position + Front, up);
@@ -47,8 +43,6 @@ internal class Camera
             0.1f,
             100f
         );
-
-    public void ResetMouse() => lastMousePosition = null;
 
     public void Update(double delta, KeyState keyState, MouseState mouseState)
     {
@@ -76,6 +70,10 @@ internal class Camera
                 MathF.Sin(yaw.ToRadians()) * MathF.Cos(pitch.ToRadians())
             );
             Front = Vector3D.Normalize(direction);
+        }
+        else
+        {
+            lastMousePosition = null;
         }
 
         foreach (var scrollEvent in mouseState.HandleScrollEvents())

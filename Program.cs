@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 
 using System.Numerics;
 using Silk.NET.Input;
@@ -105,9 +105,9 @@ internal class Program
         return window;
     }
 
-    private static void OnStateChanged(WindowState state) => camera.ResetMouse();
+    private static void OnStateChanged(WindowState state) => mouseState.ResetMouse();
 
-    private static void OnFocusChanged(bool obj) => camera.ResetMouse();
+    private static void OnFocusChanged(bool obj) => mouseState.ResetMouse();
 
     private static unsafe void OnLoad()
     {
@@ -130,14 +130,29 @@ internal class Program
                         );
                         polygonModeToggle = !polygonModeToggle;
                         break;
+                    case Key.GraveAccent:
+                        mouseState.ResetMouse();
+                        foreach (var mouse in input.Mice)
+                        {
+                            mouse.Cursor.CursorMode =
+                                mouse.Cursor.CursorMode == CursorMode.Raw
+                                    ? CursorMode.Normal
+                                    : CursorMode.Raw;
+                        }
+                        break;
                 }
             };
             keyboard.KeyUp += (_, key, _) => keyState.KeyUp(key);
         }
         foreach (var mouse in input.Mice)
         {
-            mouse.Cursor.CursorMode = CursorMode.Raw;
-            mouse.MouseMove += (_, position) => mouseState.MouseMove(position);
+            mouse.MouseMove += (mouse, position) =>
+            {
+                if (mouse.Cursor.CursorMode == CursorMode.Raw)
+                {
+                    mouseState.MouseMove(position);
+                }
+            };
             mouse.Scroll += (_, delta) =>
                 mouseState.MouseScroll(delta.Y > 0 ? ScrollDirection.Up : ScrollDirection.Down);
         }

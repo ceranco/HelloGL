@@ -10,6 +10,8 @@ internal class MouseState
     public Vector2? Position { get; private set; } = null;
     private List<ScrollDirection> scrollEvents = new();
 
+    public void ResetMouse() => Position = null;
+
     public void MouseMove(Vector2 position) => Position = position;
 
     public void MouseScroll(ScrollDirection scroll) => scrollEvents.Add(scroll);

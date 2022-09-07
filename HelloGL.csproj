@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.87.3" />
     <PackageReference Include="Silk.NET.Input" Version="2.15.0" />
     <PackageReference Include="Silk.NET.OpenGL" Version="2.15.0" />
     <PackageReference Include="Silk.NET.Windowing" Version="2.15.0" />
@@ -17,15 +18,27 @@
   </ItemGroup>
 
   <ItemGroup>
-	<None Update="shader.vs">
+    <None Update="light.vs">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="light.fs">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	<None Update="model.vs">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</None>
-	<None Update="shader.fs">
+	<None Update="model.fs">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</None>
 	<None Update="wall.jpg">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</None>
+    <None Update="container.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="container_specular.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 
