@@ -1,6 +1,7 @@
-#nullable disable
+﻿#nullable disable
 
 using System.Numerics;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -13,6 +14,7 @@ internal class Program
     private static readonly MouseState mouseState = new();
     private static GL Gl;
     private static readonly Camera camera = new(new(1600, 1600), new(0, 0, 5));
+    private static ImGuiController imGuiController;
 
     private static VertexArrayObject<Vertex, uint> modelVao;
     private static VertexArrayObject<Vertex, uint> lightVao;
@@ -199,6 +201,8 @@ internal class Program
         lightShader = ShaderProgram.FromFiles(Gl, "light.vs", "light.fs");
 
         Gl.Enable(EnableCap.DepthTest);
+
+        imGuiController = new(Gl, window, input);
     }
 
     private static void OnUpdate(double deltaTime)
@@ -249,6 +253,10 @@ internal class Program
             lightShader.Set("lightColor", light.Diffuse);
             Gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)Vertex.Cube.Length);
         }
+
+        imGuiController.NewFrame(deltaTime);
+        ImGui.ShowDemoWindow();
+        imGuiController.Render();
     }
 
     private static void OnClose()
@@ -260,6 +268,7 @@ internal class Program
         lightShader.Dispose();
         diffuseMap.Dispose();
         specularMap.Dispose();
+        imGuiController.Dispose();
     }
 
     private static void OnResize(Vector2D<int> size)
