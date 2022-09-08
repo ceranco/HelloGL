@@ -39,6 +39,9 @@
     <None Update="container_specular.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="NotoSans-Regular.ttf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 

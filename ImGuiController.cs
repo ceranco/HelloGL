@@ -12,8 +12,12 @@ internal class ImGuiController : IDisposable
 
     public ImGuiController(GL Gl, IView view, IInputContext input)
     {
+        const float scale = 1.2f;
+
         ImGui.CreateContext();
         ImGui.StyleColorsDark();
+        ImGui.GetStyle().ScaleAllSizes(scale);
+        ImGui.GetIO().Fonts.AddFontFromFileTTF("NotoSans-Regular.ttf", (int)(scale * 20));
 
         io = new(view, input);
         renderer = new(Gl);
